@@ -1,87 +1,139 @@
-from item import Item
-from character import Character
-from backpack import Backpack
-from tools import Tools
+from typing import List, Optional
+import random
 
+class Item:
+    """ an item that can be bought, sold, or gambled."""
+    def __init__(self, name: str, value: int):
+        
+        self.name = name
+        self.value = value
 
-class StoneAge:
-    """
-        Root class for testing components of 
-        the adventure game.
+class Backpack:
+    """ the player's backpack, which holds items."""
+    def __init__(self):
+        """ an empty backpack."""
+        self.items: List[Item] = []
+
+    def add_item(self, item: Item):
+        """
+        Add an item to the backpack.
+        """
+        self.items.append(item)
+
+    def remove_item(self, item: Item) -> bool:
+        """
+        Remove an item from the backpack.
+        
+        """
+        if item in self.items:
+            self.items.remove(item)
+            return True
+        return False
+
+    def get_random_item(self) -> Optional[Item]:
+        """
+         a random item from the backpack.
+        
+        """
+        if not self.items:
+            return None
+        return random.choice(self.items)
+
+class Shopkeeper:
+    def __init__(self, name: str):
+        self.name = name
+
+    def greet(self):
+        """Greet the player."""
+        print(f"{self.name}: Welcome to my shop!")
+
+    def offer_gamble(self, player: 'Player', desired_item: Item) -> bool:
+        """
+        Offer the player a gamble.
+        """
+        if not player.backpack.items:
+            print(f"{self.name}: Your backpack is empty. No gamble possible.")
+            return False
+
+        print(f"{self.name}: Would you like to gamble a random item from your backpack for {desired_item.name}?")
+        # Simulate a 50% chance of success
+        if random.choice([True, False]):
+            random_item = player.backpack.get_random_item()
+            player.backpack.remove_item(random_item)
+            player.backpack.add_item(desired_item)
+            print(f"{self.name}: Congratulations! You received {desired_item.name}.")
+            return True
+        else:
+            print(f"{self.name}: Better luck next time!")
+            return False
+
+class Shop:
     
-        Copyright: Sami Pyöttilä, 2006
-    """
-
-    @staticmethod
-    def main():
-        StoneAge.test_items_and_characters()
-
-    @staticmethod
-    def test_items_and_characters():
-        # Create items
-        stone = Item("small stone", 0.0, 2.0, 5.0, 10000.0)
-        small_axe = Item("camping axe", 25.0, 6.0, 30.0, 42.0)
-
-        # Print items
-        print(small_axe)
-        print(stone)
+    def __init__(self, shopkeeper: Shopkeeper, items: List[Item]):
         
-        # Create and test Backpack
-        leather_backpack = Backpack(100.0)
-        print(leather_backpack)
+        self.shopkeeper = shopkeeper
+        self.items = items
+
+    def display_items(self):
+        """Display the items available in the shop."""
+        print("Items for sale:")
+        for item in self.items:
+            print(f"- {item.name} (Value: {item.value})")
+
+    def buy_item(self, player: 'Player', item: Item):
+        """
+        Allow the player to buy an item from the shop.
         
-        # Check if backpack is empty using a safer approach
-        print("Backpack is empty:", len(leather_backpack._Backpack__items) == 0)
+        """
+        if item in self.items:
+            # Simulate currency exchange (not implemented in this example)
+            player.backpack.add_item(item)
+            self.items.remove(item)
+            print(f"{self.shopkeeper.name}: You've purchased {item.name}.")
+        else:
+            print(f"{self.shopkeeper.name}: That item is not available.")
 
-        # Put items in the backpack
-        if small_axe.get_volume() < leather_backpack.get_remaining_capacity():
-            leather_backpack.put(small_axe)
+    def sell_item(self, player: 'Player', item: Item):
+        """
+        Allow the player to sell an item to the shop.
+        
+        """
+        if item in player.backpack.items:
+            player.backpack.remove_item(item)
+            self.items.append(item)
+            print(f"{self.shopkeeper.name}: You've sold {item.name}.")
+        else:
+            print(f"{self.shopkeeper.name}: You don't have that item.")
 
-        # Show the contents of the backpack
-        print(leather_backpack)
-        print("Backpack is empty:", len(leather_backpack._Backpack__items) == 0)
+class Player:
+    """ the player's character."""
+    def __init__(self, name: str):
+        
+        self.name = name
+        self.backpack = Backpack()
 
-        # Create characters
-        conan = Character("Conan", 20.0, 30.0, 15.0)
-        jay = Character("Jay", 30.0, 20.0, 17.0)
-
-        # Assign backpack to Conan and add an item
-        conan.set_backpack(leather_backpack)
-        leather_backpack.put(stone)
-        print(conan)
-
-        # Assign items to hands
-        conan.set_left_hand(stone)
-        conan.set_right_hand(small_axe)
-        print(conan)
-
-        # Test giving and receiving items
-        print("\n\n\n")
-        print("Conan gives the axe to Jay...")
-        conan.give_item(jay, conan.get_right_hand_item())
-        print(conan)
-        print(jay)
-
-        # Test attacking
-        print("\n\n\n")
-        print("... Jay attacks Conan with the axe!")
-        jay.attack(conan, True)
-        jay.attack(conan, True)
-        print(conan)
-        print(jay)
-
-        # Test healing
-        print("\n\n\n")
-        print("Conan heals fully...")
-        conan.heal_fully()
-        print(conan)
-
-        # Test backpack rummage
-        print("\n\n\n")
-        print("Rummaging through Conan's backpack...")
-        conan.get_backpack().rummage()
-        print(conan)
-
-
+# Example usage
 if __name__ == "__main__":
-    StoneAge.main()
+    # Create items
+    sword = Item("Sword", 50)
+    shield = Item("Shield", 30)
+    potion = Item("Health Potion", 10)
+
+    # Create shopkeeper and shop
+    shopkeeper = Shopkeeper("Old Man")
+    shop = Shop(shopkeeper, [sword, shield, potion])
+
+    # Create player
+    player = Player("Adventurer")
+
+    # Display shop items
+    shop.display_items()
+
+    # Player buys an item
+    shop.buy_item(player, sword)
+
+    # Player sells an item
+    shop.sell_item(player, sword)
+
+    # Player attempts a gamble
+    shop.shopkeeper.offer_gamble(player, shield)

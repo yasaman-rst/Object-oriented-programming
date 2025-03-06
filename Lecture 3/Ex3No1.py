@@ -1,10 +1,4 @@
 class Train:
-    """
-    Initializes a train with a list of carriages, each containing reserved seats.
-    Uses departure and destination locations.
-    A train must have at least one carriage and a unique identifier.
-    """
-
     def __init__(self, destination, departure, train_id, num_seats):
         self.destination = destination
         self.departure = departure
@@ -27,7 +21,6 @@ class Train:
 
     """ Reserving a seat """
     def reserve_seat(self, seat_number):
-        """Reserves a seat in the first available carriage."""
         for carriage in self.carriages:
             if seat_number not in carriage and len(carriage) < self.num_seats:
                 carriage[seat_number] = "Reserved"

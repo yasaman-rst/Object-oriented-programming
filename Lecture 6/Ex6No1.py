@@ -7,72 +7,45 @@ def run_a_tests():
     a1 = Animal(6,"nectar") # an insect?
     a2 = Animal(4,"grass") # a cow?
         
-    a1.make_sound()
-    print(a1.number_of_legs(),a1.food)
-
-    a2.make_sound()
-    print(a2.number_of_legs(),a2.food)
-
+    print("a1 Food:", a1.get_food())  # Should be "nectar"
+    print("a1 Legs:", a1.get_legs())  # Should be 6
+    
+    print("a2 Food:", a2.get_food())  # Should be "grass"
+    print("a2 Legs:", a2.get_legs())  # Should be 4
 
 
 def run_b_tests():
-    
     a3 = Mammal("Meat")
     a4 = Bird("Seeds")
-    ### aaa = Animal()
-    wolf1 = Wolf("Raasinkorpi","Ship_Meat")
+    
         
-    #a3.make_sound()
-    make_it_do_the_sound(a3)
-    make_it_do_the_sound(a4)
-    make_it_do_the_sound22(a4)
-    ### make_it_do_the_sound22(aaa)
-    make_it_do_the_sound(wolf1)
+    print("a3 Food:", a3.get_food())  # Should be "Meat"
+    print("a4 Food:", a4.get_food())  # Should be "Seeds"
+    
+    print("a3 Legs:", a3.get_legs())  # Should be 4
+    print("a4 Legs:", a4.get_legs())  # Should be 2
+    
+    # Make sounds
+    a3.make_sound()  # Should print sound for Mammal
+    a4.make_sound()  # Should print sound for Bird
 
-    wolf1.another_make_sound()
-    print(a3.number_of_legs())
+def run_wolf_tests():
+    # Test the Wolf class
+    wolf1 = Wolf("Raasinkorpi", "Ship_Meat")
+    print("Wolf Food:", wolf1.get_food())  # Should be "Ship_Meat"
+    wolf1.make_sound()  # Should print "Wolf howling"
+    wolf1.another_make_sound()  # Should print another sound
 
+if __name__ == "__main__":
+    print("Running A tests...")
+    run_a_tests()
 
-def make_it_do_the_sound(any_animal:Animal):
-    any_animal.make_sound()
+    print("\nRunning B tests...")
+    run_b_tests()
 
+    print("\nRunning Wolf tests...")
+    run_wolf_tests()
 
-def make_it_do_the_sound22(any_bird:Bird):
-    any_bird.make_sound()
-
-
-
-def run_c_tests():
-    a4 = Wolf("Raasinkorpi","Ship_Meat")
-        
-    a4.make_sound()
-    print(a4.number_of_legs())
-
-
-
-def run_d_tests():
-    a5 = Bird("seeds")
-        
-    a5.make_sound()
-    print(a5.number_of_legs())
+    
 
 
-
-print("a-tests:")
-run_a_tests()
-
-
-
-print()
-print("b-tests:")
-run_b_tests()
-
-"""
-print()
-print("c-tests:")
-run_c_tests()
-
-print()
-print("d-tests:")
-run_d_tests()
-"""

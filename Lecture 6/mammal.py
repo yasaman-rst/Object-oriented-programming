@@ -3,7 +3,8 @@ from animal import Animal
 class Mammal(Animal):
 
     def __init__(self,food="None"):
-        self.__food = food  # Private variable f
+        super().__init__(4)
+        self.__food = food  # Private variable 
     # Getter 
     def get_food(self):
         return self.__food
@@ -11,7 +12,7 @@ class Mammal(Animal):
     # Setter 
     def set_food(self, food):
         self.__food = food
-        
+
     def make_sound(self): 
         print("*mammal breathing*")
 
